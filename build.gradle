@@ -44,6 +44,8 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 	// MariaDB
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	// crypto
+	implementation 'org.springframework.security:spring-security-crypto:6.1.0'
 }
 
 tasks.named('test') {
