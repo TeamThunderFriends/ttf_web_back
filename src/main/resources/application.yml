@@ -1,20 +1,14 @@
 spring:
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://svc.sel4.cloudtype.app:30965/TEST
-    password: 05925
-    username: root
-
-  jpa:
-    database: mysql
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-
+  profiles:
+    active: dev
+---
+spring:
+  profiles:
+    active: prod
+--- #api-server
+lost-ark:
+  user-auth-host: "https://lostark.game.onstove.com/Community/Free/Views/"
+--- #swagger
 springdoc:
   api-docs:
     enabled: true
