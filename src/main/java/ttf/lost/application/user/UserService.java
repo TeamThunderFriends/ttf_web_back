@@ -11,7 +11,7 @@ public interface UserService {
 	void login(User authorizedUser);
 
 	/**
-	 * 뢰원가입
+	 * 회원가입
 	 * @param joinUser 회원가입 유저
 	 */
 	void join(User joinUser);
