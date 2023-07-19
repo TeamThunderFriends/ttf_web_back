@@ -24,7 +24,7 @@ import ttf.lost.domain.usercharacter.UserCharacter;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Character {
+public class GameCharacter {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "character_no")
@@ -37,18 +37,18 @@ public class Character {
   private String itemAvgLevel; // 현재 아이템 레벨
   private String itemMaxLevel; // 최대 달성한 아이템 레벨
 
-  @OneToMany(mappedBy = "character", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "gameCharacter", fetch = FetchType.LAZY)
   private List<UserCharacter> userCharacters;
 
-  @OneToMany(mappedBy = "character", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "gameCharacter", fetch = FetchType.LAZY)
   private List<Avatar> avatars;
 
-  @OneToMany(mappedBy = "character", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "gameCharacter", fetch = FetchType.LAZY)
   private List<Gem> gems;
 
-  @OneToMany(mappedBy = "character", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "gameCharacter", fetch = FetchType.LAZY)
   private List<Accessory> accessories;
 
-  @OneToMany(mappedBy = "character", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "gameCharacter", fetch = FetchType.LAZY)
   private List<Equipment> equipment;
 }
