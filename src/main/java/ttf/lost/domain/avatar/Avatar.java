@@ -8,11 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ttf.lost.domain.character.Character;
 import ttf.lost.domain.user.User;
 
 @Entity
@@ -25,11 +27,11 @@ public class Avatar {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "avatar_no")
   private Long avatarNo;
-  private String baseEffect;
-  private String additionEffect1;
-  private String additionEffect2;
+  private String name;
+  private String tooltip;
+  private BigDecimal price;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_no")
-  private User user;
+  @JoinColumn(name = "character_no")
+  private Character character;
 }
