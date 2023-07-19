@@ -28,7 +28,7 @@ public class Accessory {
   @Column(name = "accessory_no")
   private Long accessoryNo;
   private Integer type;
-  private Integer quantityValue;
+  private Integer qualityValue;
   private Integer tier;
   private ItemGrade grade;
   private String element1; // 각인 1
