@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ttf.lost.domain.character.Character;
+import ttf.lost.domain.character.GameCharacter;
 import ttf.lost.domain.user.User;
 
 @Entity
@@ -34,5 +34,5 @@ public class UserCharacter {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "character_no")
-  private Character character;
+  private GameCharacter gameCharacter;
 }

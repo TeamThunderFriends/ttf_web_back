@@ -15,7 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ttf.lost.domain.base.ItemGrade;
-import ttf.lost.domain.character.Character;
+import ttf.lost.domain.character.GameCharacter;
 
 @Entity
 @Getter
@@ -35,5 +35,5 @@ public class Equipment {
   private ItemGrade itemGrade; // 등급
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_no")
-  private Character character;
+  private GameCharacter gameCharacter;
 }
