@@ -14,9 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ttf.lost.domain.base.ItemGrade;
-import ttf.lost.domain.character.Character;
-import ttf.lost.domain.user.User;
+import ttf.lost.domain.character.GameCharacter;
 
 @Entity
 @Getter
@@ -38,5 +36,5 @@ public class Gem {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "character_no")
-  private Character character;
+  private GameCharacter gameCharacter;
 }
