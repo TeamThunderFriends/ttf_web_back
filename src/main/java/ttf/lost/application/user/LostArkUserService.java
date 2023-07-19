@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import ttf.lost.common.exception.ErrorCode;
 import ttf.lost.common.exception.GlobalException;
 import ttf.lost.domain.user.User;
 import ttf.lost.infrastructure.UserRepository;
@@ -18,10 +19,11 @@ public class LostArkUserService implements UserService {
 
 	@Override
 	public void login(User authorizedUser) {
-		User findUser = userRepository.findByUserId(authorizedUser.getUserId()).orElseThrow(GlobalException::new);
+		User findUser = userRepository.findByUserId(authorizedUser.getUserId())
+			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER, authorizedUser.getUserId()));
 
 		if (!passwordEncoder.matches(authorizedUser.getUserPassword(), findUser.getUserPassword())) {
-			throw new GlobalException();
+			throw new GlobalException(ErrorCode.NOT_SAME_PASSWORD, authorizedUser.getUserPassword());
 		}
 	}
 
@@ -29,16 +31,16 @@ public class LostArkUserService implements UserService {
 	public void join(User joinUser) {
 		User findUser = userRepository.findByUserId(joinUser.getUserId()).orElse(null);
 
-		if (findUser != null) { // 회원이 있는경우
-			throw new GlobalException();
+		if (findUser != null) {
+			throw new GlobalException(ErrorCode.ALREADY_USER_ID, joinUser.getUserId());
 		}
 
 		joinUser.setEncryptionPassword(passwordEncoder.encode(joinUser.getUserPassword()));
 
 		try {
 			userRepository.save(joinUser);
-		} catch (DuplicateKeyException e) { // 같은아이디가 있는경우
-			throw new GlobalException();
+		} catch (DuplicateKeyException e) {
+			throw new GlobalException(ErrorCode.ALREADY_USER_ID, joinUser.getUserId());
 		}
 	}
 
