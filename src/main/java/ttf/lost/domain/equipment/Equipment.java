@@ -8,12 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ttf.lost.domain.user.User;
+import ttf.lost.domain.base.ItemGrade;
+import ttf.lost.domain.character.Character;
 
 @Entity
 @Getter
@@ -25,23 +27,13 @@ public class Equipment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "equipment_no")
   private Long equipmentNo;
-  private String name;
+  private String tooltip;
+  private BigDecimal price;
   private String type;
-  private Integer qualityValue;
-  private Integer tier;
-  private String iconPath;
-  private String grade;
-  private String characterClassName;
-  private String baseEffect1; // 물방
-  private String baseEffect2; // 마방
-  private String baseEffect3;
-  private String baseEffect4;
-  private String additionEffect1;
-  private String additionEffect2;
-  private String additionEffect3;
-  private String itemLevel;
-  private String setEffect;
+  private Integer upgradeLevel; // 강화 수치
+  private Integer itemLevel; // 아이템 레벨
+  private ItemGrade itemGrade; // 등급
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_no")
-  private User user;
+  private Character character;
 }
