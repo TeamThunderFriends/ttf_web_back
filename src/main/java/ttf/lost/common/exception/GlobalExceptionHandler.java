@@ -19,8 +19,8 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(GlobalException.class)
 	public ResponseEntity<ErrorResponse> handleCustomException(GlobalException e) {
-		Exception rootCause = e.getRootCause();
-		log.error("error info : {} {}", e.getLoggingErrorMessage(), rootCause == null ? e : rootCause);
+		Throwable cause = e.getCause();
+		log.error("error info : {} {}", e.getMessage(), cause == null ? e : cause);
 		return ResponseEntity.status(e.getErrorCode().getHttpStatus())
 			.body(new ErrorResponse.Builder(e.getErrorCode())
 				.build());
