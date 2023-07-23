@@ -1,5 +1,6 @@
 package ttf.lost.presentation.api.user;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,8 +38,9 @@ public class LoginController {
 		}
 	)
 	@PostMapping("/login")
-	public void login(@Valid @RequestBody UserRequest userRequest) {
+	public ResponseEntity<Void> login(@Valid @RequestBody UserRequest userRequest) {
 		userServiceFacade.login(userRequest.toEntity());
+		return ResponseEntity.ok().build();
 	}
 
 	@Operation(
@@ -55,8 +57,9 @@ public class LoginController {
 		}
 	)
 	@PostMapping("/join")
-	public void join(@Valid @RequestBody UserRequest userRequest) {
+	public ResponseEntity<Void> join(@Valid @RequestBody UserRequest userRequest) {
 		userServiceFacade.join(userRequest.toEntity());
+		return ResponseEntity.ok().build();
 	}
 
 }
