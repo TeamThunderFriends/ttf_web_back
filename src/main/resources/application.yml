@@ -7,6 +7,7 @@ spring:
     active: prod
 --- #api-server
 lost-ark:
+  api-key: ${LOST-ARK-API-KEY}
   user-auth-host: "https://lostark.game.onstove.com/Community/Free/Views/{url_number}"
 --- #swagger
 springdoc:
