@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>인증하는 방법</h1>
+<p> 1. 로아 사이트에서 로그인을 한다.</p>
+<p> 2. 인증할 대표캐릭터를 설정한다.</p>
+<p> 3. 인증할 대표캐릭터 닉네임을 입력하세요.</p>
+<form>
+    <label for="auth_nickname">인증할 닉네임 입력</label>
+    <input id="auth_nickname" type="text" placeholder="닉네임을 입력하세요">
+    <button type="button" id="auth_nickname_btn">입력하기</button>
+</form>
+<div>
+    <span>인증할 닉네임 </span> <span id="check_nickname">:  </span>
+</div>
+<br>
+<span> 4. <a href="https://lostark.game.onstove.com/Community/Free/List">자유 게시판에</a> 제목을 </span>
+
+<span id="auth_number" style="border: solid;"> 인증번호 </span>
+
+<span> 로 입력하고 글을 쓴다. </span>
+<p> 5. 글을쓴 후 url부분에 Views/뒤에 숫자를 가져와서 인증 하기 버튼을 누른다. </p>
+<span> ex) https://lostark.game.onstove.com/Community/Free/Views/</span><span style="color: blue">9614792</span>
+<form>
+    <label for="board_number">게시글 번호</label>
+    <input id="board_number" type="text" placeholder="게시글 번호 입력하세요">
+    <button type="button" id="authentication_btn">인증하기</button>
+</form>
+
+<script>
+    $(document).ready(function () {
+
+        $(document).on('click', '#auth_nickname_btn', function () {
+            let auth_nickname = $('#auth_nickname').val();
+            $.ajax({
+                url: '/auth/character',
+                type: 'POST',
+                contentType: 'application/json',
+                data: auth_nickname,
+                success: function onData(data) {
+                    alert(data + " 를 게시글 제목으로 작성해주세요");
+                    $('#auth_number').text(data);
+                    $('#check_nickname').text(auth_nickname);
+                },
+                error: function (request) {
+                    let errorMessage = request.responseJSON.errorMessage;
+                    let validationMessage = request.responseJSON.validationMessage;
+                    if (validationMessage != null) {
+                        let combinedMessage = '';
+                        for (const [key, value] of Object.entries(validationMessage)) {
+                            combinedMessage += `${key}: ${value}\n`;
+                        }
+                        alert(combinedMessage);
+                        return
+                    }
+                    alert(errorMessage);
+                }
+            });
+        })
+
+
+        $(document).on('click', '#authentication_btn', function () {
+            let board_number = $('#board_number').val();
+            let auth_nickname = $('#check_nickname').text();
+            let nickNameAndNumber = {
+                'authNickName': auth_nickname,
+                'boardNumber': board_number
+            }
+            $.ajax({
+                url: '/auth/number',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(nickNameAndNumber),
+                success: function onData(data) {
+                    alert("성공")
+                },
+                error: function (request) {
+                    let errorMessage = request.responseJSON.errorMessage;
+                    let validationMessage = request.responseJSON.validationMessage;
+                    if (validationMessage != null) {
+                        let combinedMessage = '';
+                        for (const [key, value] of Object.entries(validationMessage)) {
+                            combinedMessage += `${key}: ${value}\n`;
+                        }
+                        alert(combinedMessage);
+                        return
+                    }
+                    alert(errorMessage);
+                }
+            });
+        })
+
+
+    });
+
+</script>
+
+</body>
+</html>
