@@ -13,8 +13,8 @@ public class UserServiceFacade {
 	private final SessionService sessionService;
 
 	public void login(User authorizedUser) {
-		userService.login(authorizedUser);
-		sessionService.setUserSession(authorizedUser.getUserNo());
+		Long loginUserNo = userService.login(authorizedUser);
+		sessionService.setUserSession(loginUserNo);
 	}
 
 	public void join(User joinUser) {
