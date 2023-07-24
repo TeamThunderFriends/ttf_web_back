@@ -17,6 +17,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import ttf.lost.application.avatar.AvatarServiceFacade;
+import ttf.lost.infrastructure.api.avatar.AvatarAPIClient;
+import ttf.lost.infrastructure.api.avatar.AvatarAndPriceDto;
 import ttf.lost.infrastructure.api.avatar.AvatarDto;
 import ttf.lost.infrastructure.api.avatar.LostArkUserAvatarAPI;
 
@@ -27,16 +29,18 @@ import ttf.lost.infrastructure.api.avatar.LostArkUserAvatarAPI;
 public class AvatarController {
 	private final LostArkUserAvatarAPI apiTest;
 	private final AvatarServiceFacade avatarServiceFacade;
+	private final AvatarAPIClient avatarAPIClient;
 
 	/**
 	 * 임시 DTO 변환 확인 테스트이기에
 	 * 별도로 Controller를 따로 만들어 테스트를 진행하였습니다.
 	 */
 	@GetMapping("/test/{nickname}")
-	public List<AvatarDto> getTest(
-		@PathVariable String nickname
-	) throws JsonProcessingException {
-		return apiTest.findAvatar(nickname);
+	public List<AvatarAndPriceDto> getTest(
+		@PathVariable String nickname) throws JsonProcessingException {
+		List<AvatarDto> avatar = apiTest.findAvatar(nickname);
+		List<AvatarAndPriceDto> avatarPrice = apiTest.findAvatarPrice(avatar);
+		return avatarPrice;
 	}
 
 	@Operation(
@@ -54,7 +58,8 @@ public class AvatarController {
 	)
 	@GetMapping("/{nickname}")
 	public ResponseEntity<Object> findUserAvatar(
-		@PathVariable String nickname) {
+		@PathVariable String nickname)
+		throws JsonProcessingException {
 		avatarServiceFacade.findUserAvatarAndPrice(nickname);
 		return null;
 	}

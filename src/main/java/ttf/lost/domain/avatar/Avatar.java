@@ -1,7 +1,5 @@
 package ttf.lost.domain.avatar;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,8 +26,9 @@ public class Avatar {
 	@Column(name = "avatar_no")
 	private Long avatarNo;
 	private String name;
+	private String characterClass;
 	private String tooltip;
-	private BigDecimal price;
+	private Integer price;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "character_no")
