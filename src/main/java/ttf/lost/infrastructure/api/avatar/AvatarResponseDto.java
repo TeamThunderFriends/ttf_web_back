@@ -1,4 +1,6 @@
-package ttf.lost.presentation.api.avatar.response;
+package ttf.lost.infrastructure.api.avatar;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,10 +10,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class AvatarDtoResponse {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class AvatarResponseDto {
 	private String type;
 	private String name;
 	private String icon;

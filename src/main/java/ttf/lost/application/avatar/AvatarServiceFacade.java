@@ -8,15 +8,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 import ttf.lost.infrastructure.api.avatar.AvatarAndPriceDto;
+import ttf.lost.infrastructure.api.avatar.AvatarAndTotalPriceDto;
 import ttf.lost.infrastructure.api.avatar.AvatarDto;
-import ttf.lost.presentation.api.avatar.response.AvatarDtoResponse;
 
 @Service
 @RequiredArgsConstructor
 public class AvatarServiceFacade {
 	private final AvatarService avatarService;
 
-	public AvatarDtoResponse findUserAvatarAndPrice(String nickname) throws
+	public AvatarAndTotalPriceDto findUserAvatarAndPrice(String nickname) throws
 		JsonProcessingException {
 		// TODO : Open API 호출 후 DTO에 저장,
 		List<AvatarDto> userAvatarList = avatarService.findUserAvatar(nickname);
@@ -24,7 +24,8 @@ public class AvatarServiceFacade {
 		List<AvatarAndPriceDto> avatarAndPriceDtoList =
 			avatarService.avatarPriceSave(userAvatarList, nickname);
 		// TODO : 가격을 모두 더해주고 위의 정보들과 같이 Return
-
-		return null;
+		AvatarAndTotalPriceDto responseDtoList =
+			avatarService.avatarTotalPriceAndInfo(avatarAndPriceDtoList);
+		return responseDtoList;
 	}
 }
