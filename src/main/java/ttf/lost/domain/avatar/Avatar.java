@@ -27,6 +27,7 @@ public class Avatar {
 	private Long avatarNo;
 	private String name;
 	private String characterClass;
+	@Column(columnDefinition = "TEXT")
 	private String tooltip;
 	private Integer price;
 
