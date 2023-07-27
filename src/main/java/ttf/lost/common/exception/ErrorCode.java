@@ -18,7 +18,8 @@ public enum ErrorCode {
 	AUTH_REQUEST_LIMIT_EXCEEDED("인증번호는 3분에 한개씩 발급 가능합니다", "1008", HttpStatus.BAD_REQUEST),
 	AUTH_REQUIRED("인증번호를 발급받아 인증을 진행해주세요", "1009", HttpStatus.UNAUTHORIZED),
 	INVALID_AUTHENTICATION_NUMBER("잘못된 인증번호 입니다 다시 요청해주세요", "1010", HttpStatus.BAD_REQUEST),
-	INVALID_POST_NUMBER("잘못된 게시글 번호 입니다 ", "1011", HttpStatus.BAD_REQUEST);
+	INVALID_POST_NUMBER("잘못된 게시글 번호 입니다 ", "1011", HttpStatus.BAD_REQUEST),
+	NOT_JSON_TYPE("Json 형태의 데이터가 아닙니다.", "1012", HttpStatus.INTERNAL_SERVER_ERROR);
 
 	private final String errorMessage;
 	private final String errorNumber;

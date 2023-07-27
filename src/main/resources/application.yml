@@ -9,6 +9,7 @@ spring:
 lost-ark:
   api-key: ${LOST-ARK-API-KEY}
   user-auth-host: "https://lostark.game.onstove.com/Community/Free/Views/{url_number}"
+  market-api: "https://developer-lostark.game.onstove.com/markets/items"
 --- #swagger
 springdoc:
   api-docs:

@@ -3,6 +3,7 @@ package ttf.lost.infrastructure.api.avatar;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,8 +19,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ttf.lost.application.avatar.ClassNameMapConstant;
+import ttf.lost.common.exception.ErrorCode;
+import ttf.lost.common.exception.GlobalException;
 import ttf.lost.common.utils.LostArkAPIResponseParser;
 
 @Service
@@ -27,6 +31,9 @@ import ttf.lost.common.utils.LostArkAPIResponseParser;
 public class LostArkUserAvatarAPI implements AvatarAPIClient {
 	private final RestTemplate restTemplate;
 	private final ObjectMapper objectMapper;
+
+	@Value("${lost-ark.market-api}")
+	private String LOST_ARK_MARKET_API;
 
 	@Override
 	public List<AvatarDto> findAvatar(String nickname) {
@@ -43,78 +50,77 @@ public class LostArkUserAvatarAPI implements AvatarAPIClient {
 	}
 
 	@Override
-	public List<AvatarAndPriceDto> findAvatarPrice(
-		List<AvatarDto> apiList) throws JsonProcessingException {
-		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	public List<AvatarAndPriceDto> findAvatarPrice(List<AvatarDto> apiList) {
+
 		List<AvatarAndPriceDto> list = new ArrayList<>();
-		for (int i = 0; i < apiList.size(); i++) {
-			String clName = null;
+		final String uri = UriComponentsBuilder.fromHttpUrl(LOST_ARK_MARKET_API).build().toUriString();
+
+		for (AvatarDto avatarDto : apiList) {
 			// Font 값 가져오기
-			String classNameFont = apiList.get(i).getClassNameFont();
+			String classNameFont = avatarDto.getClassNameFont();
 			// 가져온 Font 값 자르기 (블레이드 or 암살자계열)
 			String classNameSubString = characterClassNameSubString(classNameFont);
 			// 만약 '계열'이라면
-			if (isCheckLine(classNameSubString)) {
-				// ex) 암살자계열 -> 데모닉 (default) 으로 검색하게끔 처리
-				clName = ClassNameMapConstant.isClassName(classNameSubString);
-			}
-			clName = ClassNameMapConstant.isClassName(classNameSubString);
+			String className = ClassNameMapConstant.isClassName(classNameSubString);
 			// ex) 페이튼 새벽빛 악기...
-			String itemName = apiList.get(i).getName();
-			String httpBody = "{\n"
-				+ "  \"sort\": \"GRADE\",\n"
-				+ "  \"categoryCode\": 20000,\n"
-				+ "  \"characterClass\": \"" + clName + "\",\n"
-				+ "  \"itemTier\": null,\n"
-				+ "  \"itemGrade\": \"\",\n"
-				+ "  \"itemName\": \"" + itemName + "\", \n"
-				+ "  \"pageNo\": 0,\n"
-				+ "  \"sortCondition\": \"ASC\"\n"
-				+ "}";
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
+			String itemName = avatarDto.getName();
 
-			HttpEntity request = new HttpEntity<>(httpBody, headers);
+			ResponseEntity<String> result = getHttpResult(uri, className, itemName);
 
-			String urlString = "https://developer-lostark.game.onstove.com/markets/items";
-			UriComponents uri = UriComponentsBuilder.fromHttpUrl(urlString).build();
-			ResponseEntity<String> result =
-				restTemplate.exchange(uri.toUriString(), HttpMethod.POST, request, String.class);
 			String body = result.getBody();
 
-			JsonNode rootNode = objectMapper.readTree(body);
-			Integer itemPrice;
-			// 만약 body(API List size = 0)가 없다면, 가격의 정보가 없어 0 처리
-			if (body.equals("{\"PageNo\":1,\"PageSize\":10,\"TotalCount\":0,\"Items\":[]}")) {
-				itemPrice = 0;
-			} else {
-				itemPrice = rootNode.get("Items").get(0).get("CurrentMinPrice").asInt();
+			JsonNode rootNode;
+			try {
+				rootNode = objectMapper.readTree(body);
+			} catch (JsonProcessingException e) {
+				throw new GlobalException(ErrorCode.NOT_JSON_TYPE, e);
 			}
 
-			AvatarAndPriceDto build = AvatarAndPriceDto.builder()
-				.type(apiList.get(i).getType())
-				.name(apiList.get(i).getName())
-				.icon(apiList.get(i).getIcon())
-				.grade(apiList.get(i).getGrade())
-				.isSet(apiList.get(i).getIsSet())
-				.isInner(apiList.get(i).getIsInner())
-				.avatarNameFont(apiList.get(i).getAvatarNameFont())
-				.avatarGradeFont(apiList.get(i).getAvatarGradeFont())
-				.classNameFont(apiList.get(i).getClassNameFont())
-				.baseEffectFont1(apiList.get(i).getBaseEffectFont1())
-				.baseEffectFont2(apiList.get(i).getBaseEffectFont2())
-				.effect1(apiList.get(i).getEffect1())
-				.effect2(apiList.get(i).getEffect2())
-				.tendencyText1(apiList.get(i).getTendencyText1())
-				.tendencyText2(apiList.get(i).getTendencyText2())
-				.tendencyFont1(apiList.get(i).getTendencyFont1())
-				.tendencyFont2(apiList.get(i).getTendencyFont2())
-				.tooltip(apiList.get(i).getTooltip())
-				.price(itemPrice != 0 ? itemPrice : null) // 0이 아니면 itemPrice, 0이면 null로 설정
-				.build();
-			list.add(build);
+			Integer itemPrice = null;
+			// 만약 body(API List size = 0)가 없다면, 가격의 정보가 없어 0 처리
+			if (rootNode.get("TotalCount").asInt() > 0) {
+				itemPrice = rootNode.get("Items").get(0).get("CurrentMinPrice").asInt();
+			}
+			AvatarAndPriceDto avatarAndPriceDto = makeAvatarAndPriceDto(avatarDto, itemPrice);
+			list.add(avatarAndPriceDto);
 		}
 		return list;
+	}
+
+	private ResponseEntity<String> getHttpResult(String uri, String className, String itemName) {
+		HttpEntity<MarketSearchDto> request = makeHttpRequestOption(className, itemName);
+		return restTemplate.exchange(uri, HttpMethod.POST, request, String.class);
+	}
+
+	private AvatarAndPriceDto makeAvatarAndPriceDto(AvatarDto avatarDto, Integer itemPrice) {
+		return AvatarAndPriceDto.builder()
+			.type(avatarDto.getType())
+			.name(avatarDto.getName())
+			.icon(avatarDto.getIcon())
+			.grade(avatarDto.getGrade())
+			.isSet(avatarDto.getIsSet())
+			.isInner(avatarDto.getIsInner())
+			.avatarNameFont(avatarDto.getAvatarNameFont())
+			.avatarGradeFont(avatarDto.getAvatarGradeFont())
+			.classNameFont(avatarDto.getClassNameFont())
+			.baseEffectFont1(avatarDto.getBaseEffectFont1())
+			.baseEffectFont2(avatarDto.getBaseEffectFont2())
+			.effect1(avatarDto.getEffect1())
+			.effect2(avatarDto.getEffect2())
+			.tendencyText1(avatarDto.getTendencyText1())
+			.tendencyText2(avatarDto.getTendencyText2())
+			.tendencyFont1(avatarDto.getTendencyFont1())
+			.tendencyFont2(avatarDto.getTendencyFont2())
+			.tooltip(avatarDto.getTooltip())
+			.price(itemPrice) // 0이 아니면 itemPrice, 0이면 null로 설정
+			.build();
+	}
+
+	private HttpEntity<MarketSearchDto> makeHttpRequestOption(String className, String itemName) {
+		MarketSearchDto httpBody = new MarketSearchDto(className, itemName);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		return new HttpEntity<>(httpBody, headers);
 	}
 
 	public static String characterClassNameSubString(String characterClassName) {
@@ -129,10 +135,26 @@ public class LostArkUserAvatarAPI implements AvatarAPIClient {
 		return text;
 	}
 
-	public boolean isCheckLine(String className) {
-		if (className.contains("계열")) {
-			return true;
+	@Getter
+	static class MarketSearchDto {
+		private final String sort;
+		private final Integer categoryCode;
+		private final String characterClass;
+		private final Integer itemTier;
+		private final String itemGrade;
+		private final String itemName;
+		private final Integer pageNo;
+		private final String sortCondition;
+
+		public MarketSearchDto(String characterClass, String itemName) {
+			this.sort = "GRADE";
+			this.categoryCode = 20000;
+			this.characterClass = characterClass;
+			this.itemTier = null;
+			this.itemGrade = "";
+			this.itemName = itemName;
+			this.pageNo = 0;
+			this.sortCondition = "ASC";
 		}
-		return false;
 	}
 }
