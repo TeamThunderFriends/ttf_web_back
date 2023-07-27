@@ -3,6 +3,7 @@ package ttf.lost.application.avatar;
 import java.util.List;
 
 import ttf.lost.infrastructure.api.avatar.AvatarAndPriceDto;
+import ttf.lost.infrastructure.api.avatar.AvatarAndTotalPriceDto;
 import ttf.lost.infrastructure.api.avatar.AvatarDto;
 
 public interface AvatarService {

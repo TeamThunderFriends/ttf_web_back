@@ -1,5 +1,6 @@
 package ttf.lost.application.avatar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -54,5 +55,47 @@ public class LostArkAvatarService implements AvatarService {
 			avatarRepository.save(build);
 		}
 		return avatarPrice;
+	}
+
+	@Override
+	public AvatarAndTotalPriceDto avatarTotalPriceAndInfo(
+		List<AvatarAndPriceDto> avatarAndPriceDtoList) throws JsonProcessingException {
+		// List를 순회하면서 ResponseDtoList에 다시 값들 넣어주기.
+		List<AvatarResponseDto> responseDtoList = new ArrayList<>();
+		convertAvatarDto(avatarAndPriceDtoList, responseDtoList);
+		// ResponseDtoList 를 순회하면서 각 Price들을 가져와 더해주기.
+		int totalPrice = responseDtoList.stream()
+			.mapToInt(responseDto -> responseDto.getPrice() != null ? responseDto.getPrice() : 0)
+			.sum();
+		// 더해준 값들을 total값에 넣어주기.
+		// TotalPriceAndAvatarListDto 객체 생성하여 반환하기.
+		return new AvatarAndTotalPriceDto(totalPrice, responseDtoList);
+	}
+
+	private void convertAvatarDto(List<AvatarAndPriceDto> avatarAndPriceDtoList,
+		List<AvatarResponseDto> responseDtoList) {
+		for (AvatarAndPriceDto dto : avatarAndPriceDtoList) {
+			AvatarResponseDto responseDto = AvatarResponseDto.builder()
+				.type(dto.getType())
+				.name(dto.getName())
+				.icon(dto.getIcon())
+				.grade(dto.getGrade())
+				.isSet(dto.getIsSet())
+				.isInner(dto.getIsInner())
+				.avatarNameFont(dto.getAvatarNameFont())
+				.avatarGradeFont(dto.getAvatarGradeFont())
+				.classNameFont(dto.getClassNameFont())
+				.baseEffectFont1(dto.getBaseEffectFont1())
+				.baseEffectFont2(dto.getBaseEffectFont2())
+				.effect1(dto.getEffect1())
+				.effect2(dto.getEffect2())
+				.tendencyText1(dto.getTendencyText1())
+				.tendencyText2(dto.getTendencyText2())
+				.tendencyFont1(dto.getTendencyFont1())
+				.tendencyFont2(dto.getTendencyFont2())
+				.price(dto.getPrice())
+				.build();
+			responseDtoList.add(responseDto);
+		}
 	}
 }

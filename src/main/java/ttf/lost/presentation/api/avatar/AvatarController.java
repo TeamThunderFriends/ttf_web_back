@@ -1,7 +1,5 @@
 package ttf.lost.presentation.api.avatar;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,31 +15,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import ttf.lost.application.avatar.AvatarServiceFacade;
-import ttf.lost.infrastructure.api.avatar.AvatarAPIClient;
-import ttf.lost.infrastructure.api.avatar.AvatarAndPriceDto;
-import ttf.lost.infrastructure.api.avatar.AvatarDto;
-import ttf.lost.infrastructure.api.avatar.LostArkUserAvatarAPI;
+import ttf.lost.infrastructure.api.avatar.AvatarAndTotalPriceDto;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/avatar")
 @Tag(name = "find_user_avatar", description = "유저 아바타와 가격 가져오기")
 public class AvatarController {
-	private final LostArkUserAvatarAPI apiTest;
 	private final AvatarServiceFacade avatarServiceFacade;
-	private final AvatarAPIClient avatarAPIClient;
-
-	/**
-	 * 임시 DTO 변환 확인 테스트이기에
-	 * 별도로 Controller를 따로 만들어 테스트를 진행하였습니다.
-	 */
-	@GetMapping("/test/{nickname}")
-	public List<AvatarAndPriceDto> getTest(
-		@PathVariable String nickname) {
-		List<AvatarDto> avatar = apiTest.findAvatar(nickname);
-		List<AvatarAndPriceDto> avatarPrice = apiTest.findAvatarPrice(avatar);
-		return avatarPrice;
-	}
 
 	@Operation(
 		operationId = "find_user_avatar",
@@ -57,10 +38,10 @@ public class AvatarController {
 		}
 	)
 	@GetMapping("/{nickname}")
-	public ResponseEntity<Object> findUserAvatar(
+	public ResponseEntity<AvatarAndTotalPriceDto> findUserAvatar(
 		@PathVariable String nickname)
 		throws JsonProcessingException {
-		avatarServiceFacade.findUserAvatarAndPrice(nickname);
-		return null;
+		AvatarAndTotalPriceDto userAvatarAndPrice = avatarServiceFacade.findUserAvatarAndPrice(nickname);
+		return ResponseEntity.ok(userAvatarAndPrice);
 	}
 }
