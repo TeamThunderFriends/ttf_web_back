@@ -37,7 +37,7 @@ public class AvatarController {
 	 */
 	@GetMapping("/test/{nickname}")
 	public List<AvatarAndPriceDto> getTest(
-		@PathVariable String nickname) throws JsonProcessingException {
+		@PathVariable String nickname) {
 		List<AvatarDto> avatar = apiTest.findAvatar(nickname);
 		List<AvatarAndPriceDto> avatarPrice = apiTest.findAvatarPrice(avatar);
 		return avatarPrice;

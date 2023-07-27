@@ -8,6 +8,7 @@ spring:
 --- #api-server
 lost-ark:
   user-auth-host: "https://lostark.game.onstove.com/Community/Free/Views/"
+  market-api: "https://developer-lostark.game.onstove.com/markets/items"
 --- #swagger
 springdoc:
   api-docs:

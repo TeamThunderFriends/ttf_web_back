@@ -2,8 +2,6 @@ package ttf.lost.application.avatar;
 
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import ttf.lost.infrastructure.api.avatar.AvatarAndPriceDto;
 import ttf.lost.infrastructure.api.avatar.AvatarDto;
 
@@ -19,6 +17,5 @@ public interface AvatarService {
 	 * @param apiList Open API로 받아온 AvatarList
 	 * @param nickname 캐릭터 닉네임
 	 */
-	List<AvatarAndPriceDto> avatarPriceSave(List<AvatarDto> apiList, String nickname) throws
-		JsonProcessingException;
+	List<AvatarAndPriceDto> avatarPriceSave(List<AvatarDto> apiList, String nickname);
 }
