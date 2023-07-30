@@ -14,7 +14,9 @@ import ttf.lost.common.exception.GlobalException;
 import ttf.lost.domain.avatar.Avatar;
 import ttf.lost.infrastructure.api.avatar.AvatarAPIClient;
 import ttf.lost.infrastructure.api.avatar.AvatarAndPriceDto;
+import ttf.lost.infrastructure.api.avatar.AvatarAndTotalPriceDto;
 import ttf.lost.infrastructure.api.avatar.AvatarDto;
+import ttf.lost.infrastructure.api.avatar.AvatarResponseDto;
 import ttf.lost.infrastructure.api.avatar.LostArkUserAvatarAPI;
 import ttf.lost.infrastructure.repository.avatar.AvatarRepository;
 
@@ -58,8 +60,7 @@ public class LostArkAvatarService implements AvatarService {
 	}
 
 	@Override
-	public AvatarAndTotalPriceDto avatarTotalPriceAndInfo(
-		List<AvatarAndPriceDto> avatarAndPriceDtoList) throws JsonProcessingException {
+	public AvatarAndTotalPriceDto avatarTotalPriceAndInfo(List<AvatarAndPriceDto> avatarAndPriceDtoList) {
 		// List를 순회하면서 ResponseDtoList에 다시 값들 넣어주기.
 		List<AvatarResponseDto> responseDtoList = new ArrayList<>();
 		convertAvatarDto(avatarAndPriceDtoList, responseDtoList);
