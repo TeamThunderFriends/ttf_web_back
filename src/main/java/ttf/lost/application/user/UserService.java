@@ -6,9 +6,11 @@ public interface UserService {
 
 	/**
 	 * 로그인
+	 *
 	 * @param authorizedUser 로그인 유저
+	 * @return
 	 */
-	void login(User authorizedUser);
+	Long login(User authorizedUser);
 
 	/**
 	 * 회원가입

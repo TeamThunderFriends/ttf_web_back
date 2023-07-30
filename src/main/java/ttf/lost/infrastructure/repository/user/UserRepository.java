@@ -1,4 +1,4 @@
-package ttf.lost.infrastructure;
+package ttf.lost.infrastructure.repository.user;
 
 import java.util.Optional;
 
