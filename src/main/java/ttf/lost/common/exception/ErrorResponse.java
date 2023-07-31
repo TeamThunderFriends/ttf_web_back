@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.validation.FieldError;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -43,7 +44,7 @@ public class ErrorResponse {
 		}
 
 		public Builder validation(List<FieldError> validation) {
-			if (validation != null) {
+			if (!ObjectUtils.isEmpty(validation)) {
 				addValidationMessage(validation);
 			}
 			return this;
@@ -85,7 +86,7 @@ public class ErrorResponse {
 		}
 
 		private void validationMessageEmptyCheck() {
-			if (this.validationMessage == null) {
+			if (ObjectUtils.isEmpty(validationMessage)) {
 				this.validationMessage = new HashMap<>();
 			}
 		}
