@@ -7,7 +7,7 @@ spring:
     active: prod
 --- #api-server
 lost-ark:
-  user-auth-host: "https://lostark.game.onstove.com/Community/Free/Views/"
+  user-auth-host: "https://lostark.game.onstove.com/Community/Free/Views/{url_number}"
 --- #swagger
 springdoc:
   api-docs:
@@ -17,3 +17,6 @@ springdoc:
     tagsSorter: alpha
     operations-sorter: alpha
     display-request-duration: true
+---
+policy:
+  character-authentication-sec: 180 #인증 번호 유효 시간 180초
