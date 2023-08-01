@@ -1,4 +1,4 @@
-package ttf.lost.infrastructure.api.avatar;
+package ttf.lost.presentation.api.avatar.response;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AvatarAndTotalPriceDto {
+public class AvatarAndTotalPriceResponse {
 	private int totalPrice;
-	private List<AvatarResponseDto> avatarList;
+	private List<AvatarResponse> avatarList;
 }
