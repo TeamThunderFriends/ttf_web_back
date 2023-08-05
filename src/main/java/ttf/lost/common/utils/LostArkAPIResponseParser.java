@@ -10,17 +10,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ttf.lost.common.annotation.JsonPaths;
+import ttf.lost.common.annotation.JsonRoot;
 import ttf.lost.common.exception.ErrorCode;
 import ttf.lost.common.exception.GlobalException;
 
 public class LostArkAPIResponseParser {
 
-	public static <T> List<T> parseJson(String json, Class<T> clazz, ObjectMapper objectMapper) {
-		List<T> resultList = new ArrayList<>();
+	public static <T> List<T> parseJsonArray(String json, Class<T> clazz, ObjectMapper objectMapper) {
+		List<T> resultList;
 
 		try {
 			JsonNode rootNode = objectMapper.readTree(json);
-			JsonNode armoryAvatarsNode = rootNode.path("ArmoryAvatars");
+			JsonRoot annotation = clazz.getAnnotation(JsonRoot.class);
+			if (annotation == null) {
+				throw new GlobalException(ErrorCode.INTERNAL_SERVER_ERROR, "JsonRoot 어노테이션 없음");
+			}
+			JsonNode armoryAvatarsNode = rootNode.path(annotation.value());
 			resultList = parseJsonArrayNode(armoryAvatarsNode, clazz, objectMapper);
 		} catch (Exception e) {
 			throw new GlobalException(ErrorCode.INTERNAL_SERVER_ERROR, e, "api 파싱 실패");

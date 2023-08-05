@@ -46,7 +46,7 @@ public class LostArkUserAvatarAPI implements AvatarAPIClient {
 		ResponseEntity<String> result =
 			restTemplate.exchange(uri.toUriString(), HttpMethod.GET, request, String.class);
 		String body = result.getBody();
-		return LostArkAPIResponseParser.parseJson(body, AvatarDto.class, objectMapper);
+		return LostArkAPIResponseParser.parseJsonArray(body, AvatarDto.class, objectMapper);
 	}
 
 	@Override
