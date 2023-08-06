@@ -14,11 +14,11 @@ import ttf.lost.common.exception.GlobalException;
 import ttf.lost.domain.avatar.Avatar;
 import ttf.lost.infrastructure.api.avatar.AvatarAPIClient;
 import ttf.lost.infrastructure.api.avatar.AvatarAndPriceDto;
-import ttf.lost.infrastructure.api.avatar.AvatarAndTotalPriceDto;
 import ttf.lost.infrastructure.api.avatar.AvatarDto;
-import ttf.lost.infrastructure.api.avatar.AvatarResponseDto;
 import ttf.lost.infrastructure.api.avatar.LostArkUserAvatarAPI;
 import ttf.lost.infrastructure.repository.avatar.AvatarRepository;
+import ttf.lost.presentation.api.avatar.response.AvatarAndTotalPriceResponse;
+import ttf.lost.presentation.api.avatar.response.AvatarResponse;
 
 @Service
 @RequiredArgsConstructor
@@ -60,9 +60,9 @@ public class LostArkAvatarService implements AvatarService {
 	}
 
 	@Override
-	public AvatarAndTotalPriceDto avatarTotalPriceAndInfo(List<AvatarAndPriceDto> avatarAndPriceDtoList) {
+	public AvatarAndTotalPriceResponse avatarTotalPriceAndInfo(List<AvatarAndPriceDto> avatarAndPriceDtoList) {
 		// List를 순회하면서 ResponseDtoList에 다시 값들 넣어주기.
-		List<AvatarResponseDto> responseDtoList = new ArrayList<>();
+		List<AvatarResponse> responseDtoList = new ArrayList<>();
 		convertAvatarDto(avatarAndPriceDtoList, responseDtoList);
 		// ResponseDtoList 를 순회하면서 각 Price들을 가져와 더해주기.
 		int totalPrice = responseDtoList.stream()
@@ -70,13 +70,13 @@ public class LostArkAvatarService implements AvatarService {
 			.sum();
 		// 더해준 값들을 total값에 넣어주기.
 		// TotalPriceAndAvatarListDto 객체 생성하여 반환하기.
-		return new AvatarAndTotalPriceDto(totalPrice, responseDtoList);
+		return new AvatarAndTotalPriceResponse(totalPrice, responseDtoList);
 	}
 
 	private void convertAvatarDto(List<AvatarAndPriceDto> avatarAndPriceDtoList,
-		List<AvatarResponseDto> responseDtoList) {
+		List<AvatarResponse> responseDtoList) {
 		for (AvatarAndPriceDto dto : avatarAndPriceDtoList) {
-			AvatarResponseDto responseDto = AvatarResponseDto.builder()
+			AvatarResponse responseDto = AvatarResponse.builder()
 				.type(dto.getType())
 				.name(dto.getName())
 				.icon(dto.getIcon())

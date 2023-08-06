@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import ttf.lost.application.avatar.AvatarServiceFacade;
-import ttf.lost.infrastructure.api.avatar.AvatarAndTotalPriceDto;
+import ttf.lost.presentation.api.avatar.response.AvatarAndTotalPriceResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,9 +36,9 @@ public class AvatarController {
 		}
 	)
 	@GetMapping("/{nickname}")
-	public ResponseEntity<AvatarAndTotalPriceDto> findUserAvatar(
+	public ResponseEntity<AvatarAndTotalPriceResponse> findUserAvatar(
 		@PathVariable String nickname) {
-		AvatarAndTotalPriceDto userAvatarAndPrice = avatarServiceFacade.findUserAvatarAndPrice(nickname);
+		AvatarAndTotalPriceResponse userAvatarAndPrice = avatarServiceFacade.findUserAvatarAndPrice(nickname);
 		return ResponseEntity.ok(userAvatarAndPrice);
 	}
 }
