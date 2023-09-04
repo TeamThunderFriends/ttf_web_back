@@ -45,9 +45,9 @@ public class LostArkUserEquipmentAPI implements EquipmentAPIClient {
                 = restTemplate.exchange(uri.toUriString(), HttpMethod.GET, entity, String.class);
 
         String body = response.getBody();
-        System.out.println("body = " + body);
-        List<EquipmentDto> equipmentDtos = LostArkAPIResponseParser.parseJson(body, EquipmentDto.class, objectMapper);
-        System.out.println("equipmentDtos = " + equipmentDtos.toString());
-        return LostArkAPIResponseParser.parseJson(body, EquipmentDto.class, objectMapper);
+        log.info("body : {}", body);
+        return LostArkAPIResponseParser.parseJsonArray(body, EquipmentDto.class, objectMapper);
     }
+
+
 }

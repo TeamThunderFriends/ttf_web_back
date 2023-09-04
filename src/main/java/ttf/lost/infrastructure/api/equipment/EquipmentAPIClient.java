@@ -7,4 +7,9 @@ public interface EquipmentAPIClient {
      * @param characterName
      */
     List<EquipmentDto> getArmoryEquipment(String characterName);
+
+    /**
+     * Lost Ark Open API Markets 에서 각 강화 재료의 가격과 비용을 합산하여 가져오기
+     *
+     */
 }

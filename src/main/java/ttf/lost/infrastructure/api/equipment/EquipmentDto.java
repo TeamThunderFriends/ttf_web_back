@@ -3,6 +3,7 @@ package ttf.lost.infrastructure.api.equipment;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import ttf.lost.common.annotation.JsonPaths;
+import ttf.lost.common.annotation.JsonRoot;
 
 @Getter
 @Setter
@@ -10,6 +11,7 @@ import ttf.lost.common.annotation.JsonPaths;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonRoot("ArmoryEquipments")
 public class EquipmentDto {
     /*"투구"*/
     @JsonPaths("Type")
