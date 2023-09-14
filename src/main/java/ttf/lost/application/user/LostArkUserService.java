@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import ttf.lost.common.exception.ErrorCode;
 import ttf.lost.common.exception.GlobalException;
 import ttf.lost.domain.user.User;
-import ttf.lost.infrastructure.UserRepository;
+import ttf.lost.infrastructure.repository.user.UserRepository;
 
 @Service
 @RequiredArgsConstructor
