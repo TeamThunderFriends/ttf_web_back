@@ -10,9 +10,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,5 +27,6 @@ public class AvatarInquiry {
 	private String name; // 아바타 이름
 	private String characterClass; // 클래스 명
 	private String grade; // 등급
+	// @Column(name = "part", unique = true)
 	private String part; // 부위
 }

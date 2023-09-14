@@ -24,5 +24,5 @@ public interface AvatarService {
 	 * 리스트의 각 Price들을 더해 Total을 받고 나머지 정보들과 묶어서 Return
 	 * @param avatarAndPriceDtoList 이전 List에서 받아온 데이터들
 	 */
-	AvatarAndTotalPriceResponse avatarTotalPriceAndInfo(List<AvatarAndPriceDto> avatarAndPriceDtoList);
+	AvatarAndTotalPriceResponse avatarTotalPriceAndInfo(List<AvatarAndPriceDto> avatarAndPriceDtoList, String nickname);
 }
