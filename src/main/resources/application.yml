@@ -10,6 +10,7 @@ lost-ark:
   api-key: ${LOST-ARK-API-KEY}
   market-api: "https://developer-lostark.game.onstove.com/markets/items"
   user-auth-host: "https://lostark.game.onstove.com/Community/Free/Views/{url_number}"
+  market-api: "https://developer-lostark.game.onstove.com/markets/items"
 --- #swagger
 springdoc:
   api-docs:
@@ -19,3 +20,6 @@ springdoc:
     tagsSorter: alpha
     operations-sorter: alpha
     display-request-duration: true
+---
+policy:
+  character-authentication-sec: 180 #인증 번호 유효 시간 180초

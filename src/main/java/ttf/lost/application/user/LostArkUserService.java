@@ -1,5 +1,7 @@
 package ttf.lost.application.user;
 
+import java.util.Optional;
+
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,22 +20,23 @@ public class LostArkUserService implements UserService {
 	private final UserRepository userRepository;
 
 	@Override
-	public void login(User authorizedUser) {
+	public Long login(User authorizedUser) {
 		User findUser = userRepository.findByUserId(authorizedUser.getUserId())
 			.orElseThrow(() -> new GlobalException(ErrorCode.NOT_FOUND_USER, authorizedUser.getUserId()));
 
 		if (!passwordEncoder.matches(authorizedUser.getUserPassword(), findUser.getUserPassword())) {
 			throw new GlobalException(ErrorCode.NOT_SAME_PASSWORD, authorizedUser.getUserPassword());
 		}
+		return findUser.getUserNo();
 	}
 
 	@Override
 	public void join(User joinUser) {
-		User findUser = userRepository.findByUserId(joinUser.getUserId()).orElse(null);
+		Optional<User> findUser = userRepository.findByUserId(joinUser.getUserId());
 
-		if (findUser != null) {
+		findUser.ifPresent(user -> {
 			throw new GlobalException(ErrorCode.ALREADY_USER_ID, joinUser.getUserId());
-		}
+		});
 
 		joinUser.setEncryptionPassword(passwordEncoder.encode(joinUser.getUserPassword()));
 
