@@ -18,6 +18,6 @@ public class AvatarServiceFacade {
 		List<AvatarDto> userAvatarList = avatarService.findUserAvatar(nickname);
 		List<AvatarAndPriceDto> avatarAndPriceDtoList =
 			avatarService.avatarPriceSave(userAvatarList, nickname);
-		return avatarService.avatarTotalPriceAndInfo(avatarAndPriceDtoList);
+		return avatarService.avatarTotalPriceAndInfo(avatarAndPriceDtoList, nickname);
 	}
 }
